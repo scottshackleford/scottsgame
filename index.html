@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Midget or Miner - Ultimate Version</title>
+  <title>Midget or Miner - Final Game</title>
   <style>
     body {
       background-color: #000;
@@ -15,17 +15,18 @@
       overflow: hidden;
     }
     .container {
-      margin-top: 50px;
+      margin-top: 30px;
     }
     .images {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 30px;
-      gap: 50px;
+      margin-top: 20px;
+      gap: 60px;
     }
     .images img {
       width: 200px;
+      height: auto;
       border-radius: 15px;
       border: 3px solid white;
     }
@@ -33,6 +34,8 @@
       font-size: 4rem;
       margin-top: 20px;
       height: 60px;
+      transform-origin: bottom center;
+      transition: transform 0.2s ease;
     }
     #winner {
       margin-top: 40px;
@@ -44,14 +47,14 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       pointer-events: none;
-      display: none;
+      z-index: 10;
     }
-    #play-again {
-      margin-top: 40px;
-      padding: 15px 30px;
+    #playButton {
+      margin-top: 20px;
+      padding: 10px 20px;
       font-size: 1.5rem;
       background-color: red;
       color: white;
@@ -63,119 +66,127 @@
 </head>
 <body>
 
-<div class="container">
-  <h1>Midget or Miner</h1>
-  <div class="images">
-    <img id="img1" src="download.jpg" alt="Midget">
-    <img id="img2" src="download-1.jpg" alt="Miner">
+  <div class="container">
+    <button id="playButton" onclick="startGame()">Play Again</button>
+
+    <div class="images" id="imageContainer">
+      <img id="img1" src="download.jpg" alt="Midget">
+      <img id="img2" src="download-1.jpg" alt="Miner">
+    </div>
+
+    <div id="arrow">⬆️</div>
+    <div id="winner"></div>
+    <canvas id="fireworks"></canvas>
   </div>
-  <div id="arrow">⬅️</div>
-  <div id="winner">WINNER!</div>
-  <button id="play-again">Play Again</button>
-</div>
 
-<canvas id="fireworks"></canvas>
+  <script>
+    let choices = [
+      { word: "Midget", image: "download.jpg" },
+      { word: "Miner", image: "download-1.jpg" }
+    ];
 
-<script>
-  const playButton = document.getElementById('play-again');
-  const arrow = document.getElementById('arrow');
-  const winnerText = document.getElementById('winner');
-  const fireworksCanvas = document.getElementById('fireworks');
-  const ctx = fireworksCanvas.getContext('2d');
+    let arrow = document.getElementById('arrow');
+    let winnerDiv = document.getElementById('winner');
+    let img1 = document.getElementById('img1');
+    let img2 = document.getElementById('img2');
+    let imageContainer = document.getElementById('imageContainer');
+    let playButton = document.getElementById('playButton');
+    let fireworksCanvas = document.getElementById('fireworks');
+    let ctx = fireworksCanvas.getContext('2d');
 
-  let arrowInterval;
-  let currentArrow = 0;
+    let arrowInterval;
+    let pointingLeft = true;
 
-  // Resize fireworks canvas
-  function resizeCanvas() {
-    fireworksCanvas.width = window.innerWidth;
-    fireworksCanvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
+    function startGame() {
+      // Reset
+      winnerDiv.style.display = "none";
+      fireworksCanvas.style.display = "none";
+      imageContainer.style.display = "flex";
+      img1.style.display = "block";
+      img2.style.display = "block";
 
-  function startGame() {
-    winnerText.style.display = 'none';
-    fireworksCanvas.style.display = 'none';
-    ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+      arrow.style.transform = "rotate(0deg)";
+      pointingLeft = true;
 
-    let duration = 2000; // 2 seconds
-    let flashSpeed = 100; // Arrow moves every 100ms
-
-    arrow.textContent = "⬅️";
-
-    arrowInterval = setInterval(() => {
-      currentArrow = 1 - currentArrow;
-      arrow.textContent = currentArrow === 0 ? "⬅️" : "➡️";
-    }, flashSpeed);
-
-    setTimeout(() => {
-      clearInterval(arrowInterval);
-
-      const winner = Math.random() < 0.5 ? 0 : 1;
-      arrow.textContent = winner === 0 ? "⬅️" : "➡️";
-
-      winnerText.style.display = 'block';
-
-      startFireworks();
-    }, duration);
-  }
-
-  playButton.addEventListener('click', startGame);
-
-  // Fireworks animation
-  let fireworks = [];
-
-  function random(min, max) {
-    return Math.random() * (max - min) + min;
-  }
-
-  function createFirework() {
-    return {
-      x: random(0, fireworksCanvas.width),
-      y: fireworksCanvas.height,
-      vx: random(-2, 2),
-      vy: random(-7, -3),
-      radius: random(2, 4),
-      color: `hsl(${Math.floor(Math.random() * 360)}, 100%, 50%)`,
-      alpha: 1
-    };
-  }
-
-  function startFireworks() {
-    fireworksCanvas.style.display = 'block';
-
-    fireworks = Array.from({ length: 50 }, createFirework);
-
-    function animate() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
-
-      fireworks.forEach((f, i) => {
-        f.x += f.vx;
-        f.y += f.vy;
-        f.vy += 0.05;
-        f.alpha -= 0.01;
-
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-        ctx.fillStyle = f.color;
-        ctx.globalAlpha = f.alpha;
-        ctx.fill();
-
-        if (f.alpha <= 0) {
-          fireworks[i] = createFirework();
+      // Arrow starts pivoting
+      arrowInterval = setInterval(() => {
+        if (pointingLeft) {
+          arrow.style.transform = "rotate(-30deg)";
+        } else {
+          arrow.style.transform = "rotate(30deg)";
         }
-      });
+        pointingLeft = !pointingLeft;
+      }, 200);
 
-      ctx.globalAlpha = 1;
-
-      requestAnimationFrame(animate);
+      // After 2 seconds, pick a winner
+      setTimeout(() => {
+        clearInterval(arrowInterval);
+        pickWinner();
+      }, 2000);
     }
 
-    animate();
-  }
-</script>
+    function pickWinner() {
+      let randomIndex = Math.floor(Math.random() * choices.length);
+      let finalChoice = choices[randomIndex];
+
+      // Show only the winning image
+      if (randomIndex === 0) {
+        img1.style.display = "block";
+        img2.style.display = "none";
+      } else {
+        img1.style.display = "none";
+        img2.style.display = "block";
+      }
+
+      winnerDiv.textContent = `Winner: ${finalChoice.word}! 🎉`;
+      winnerDiv.style.display = "block";
+
+      launchFireworks();
+    }
+
+    function launchFireworks() {
+      fireworksCanvas.style.display = "block";
+      fireworksCanvas.width = window.innerWidth;
+      fireworksCanvas.height = window.innerHeight;
+
+      let particles = [];
+
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: fireworksCanvas.width / 2,
+          y: fireworksCanvas.height / 2,
+          speedX: (Math.random() - 0.5) * 10,
+          speedY: (Math.random() - 0.5) * 10,
+          radius: Math.random() * 3 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`
+        });
+      }
+
+      function animate() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+        ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+        particles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          p.radius *= 0.96;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+        });
+
+        particles = particles.filter(p => p.radius > 0.5);
+
+        if (particles.length > 0) {
+          requestAnimationFrame(animate);
+        }
+      }
+
+      animate();
+    }
+  </script>
 
 </body>
 </html>
