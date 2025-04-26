@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Midget or Miner - Final Game</title>
+  <title>Midget or Miner - Super Deluxe Party Mode</title>
   <style>
     body {
       background-color: #000;
@@ -13,6 +13,7 @@
       padding: 0;
       text-align: center;
       overflow: hidden;
+      transition: background-color 0.3s;
     }
     .container {
       margin-top: 30px;
@@ -79,6 +80,9 @@
     <canvas id="fireworks"></canvas>
   </div>
 
+  <audio id="drumroll" src="https://www.soundjay.com/misc/sounds/drum-roll-1.mp3"></audio>
+  <audio id="victory" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
+
   <script>
     let choices = [
       { word: "Midget", image: "download.jpg" },
@@ -94,7 +98,11 @@
     let fireworksCanvas = document.getElementById('fireworks');
     let ctx = fireworksCanvas.getContext('2d');
 
+    let drumroll = document.getElementById('drumroll');
+    let victory = document.getElementById('victory');
+
     let arrowInterval;
+    let colorInterval;
     let pointingLeft = true;
 
     function startGame() {
@@ -104,9 +112,17 @@
       imageContainer.style.display = "flex";
       img1.style.display = "block";
       img2.style.display = "block";
-
       arrow.style.transform = "rotate(0deg)";
       pointingLeft = true;
+      document.body.style.backgroundColor = "#000";
+
+      drumroll.currentTime = 0;
+      drumroll.play();
+
+      // Flash background colors
+      colorInterval = setInterval(() => {
+        document.body.style.backgroundColor = getRandomColor();
+      }, 200);
 
       // Arrow starts pivoting
       arrowInterval = setInterval(() => {
@@ -116,16 +132,20 @@
           arrow.style.transform = "rotate(30deg)";
         }
         pointingLeft = !pointingLeft;
-      }, 200);
+      }, 100);
 
-      // After 2 seconds, pick a winner
+      // After 4 seconds, pick a winner
       setTimeout(() => {
         clearInterval(arrowInterval);
+        clearInterval(colorInterval);
+        document.body.style.backgroundColor = "#000";
         pickWinner();
-      }, 2000);
+      }, 4000);
     }
 
     function pickWinner() {
+      drumroll.pause();
+
       let randomIndex = Math.floor(Math.random() * choices.length);
       let finalChoice = choices[randomIndex];
 
@@ -138,10 +158,21 @@
         img2.style.display = "block";
       }
 
-      winnerDiv.textContent = `Winner: ${finalChoice.word}! 🎉`;
+      winnerDiv.textContent = `WINNER: ${finalChoice.word}! 🎉`;
       winnerDiv.style.display = "block";
 
+      victory.currentTime = 0;
+      victory.play();
       launchFireworks();
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     }
 
     function launchFireworks() {
