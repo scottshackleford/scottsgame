@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Midget or Miner - Working Version</title>
+  <title>Midget or Miner - Final Version</title>
   <style>
     body {
       background-color: #000;
@@ -48,10 +48,10 @@
   <script>
     let flashingInterval;
 
-    // Using placeholder images so it works immediately
+    // Now using your real images!
     let choices = [
-      { word: "Midget", image: "https://via.placeholder.com/300x400?text=Midget" },
-      { word: "Miner", image: "https://via.placeholder.com/300x400?text=Miner" }
+      { word: "Midget", image: "download.jpg" },
+      { word: "Miner", image: "download-1.jpg" }
     ];
 
     function startFlashing() {
@@ -79,7 +79,7 @@
         resultDiv.style.transform = "scale(1.2)";
 
         photo.src = finalChoice.image;
-        photo.style.display = "block"; // Show image
+        photo.style.display = "block"; // Show the matching image
       }, duration);
     }
 
