@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - Bangkok Edition</title>
+  <title>Choose Your Thai Bride - Mobile Friendly</title>
   <style>
     body {
       background-color: #000;
@@ -12,26 +12,30 @@
       margin: 0;
       padding: 0;
       text-align: center;
-      overflow: hidden;
+      overflow-x: hidden;
     }
     .container {
       margin-top: 20px;
       position: relative;
       z-index: 5;
+      padding: 10px;
     }
     .covers {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 20px;
-      gap: 60px;
+      gap: 40px;
+      flex-wrap: wrap;
     }
     .cover-box {
       position: relative;
       cursor: pointer;
+      flex: 1 1 45%;
+      max-width: 45%;
     }
     .cover-box img {
-      width: 250px;
+      width: 100%;
       height: auto;
       border-radius: 15px;
       border: 3px solid white;
@@ -50,7 +54,7 @@
     }
     #winnerWord {
       margin-top: 20px;
-      font-size: 4rem;
+      font-size: 3rem;
       font-weight: bold;
       display: none;
       background: linear-gradient(90deg, #ff00cc, #3333ff, #00ff99, #ffcc00);
@@ -82,6 +86,25 @@
       cursor: pointer;
       z-index: 5;
       position: relative;
+    }
+    /* Smaller text and button on mobile */
+    @media (max-width: 600px) {
+      #preInstruction, #instruction {
+        font-size: 1.5rem;
+      }
+      #winnerWord {
+        font-size: 2.5rem;
+      }
+      #playButton {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+      }
+      .covers {
+        gap: 20px;
+      }
+      .cover-box {
+        max-width: 80%;
+      }
     }
   </style>
 </head>
