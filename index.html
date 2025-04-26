@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - Fixed Version</title>
+  <title>Choose Your Thai Bride - FINAL</title>
   <style>
     body {
       background-color: #000;
@@ -68,7 +68,7 @@
       font-size: 2rem;
       font-weight: bold;
     }
-    #instruction, #round2Instruction {
+    #instruction, #round2Instruction, #playAgainButton {
       display: none;
     }
     #winnerWord, #winnerLike, #secondResult {
@@ -96,7 +96,7 @@
       pointer-events: none;
       z-index: 1;
     }
-    #playButton {
+    button {
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 1.5rem;
@@ -108,7 +108,7 @@
       z-index: 5;
       position: relative;
     }
-    /* Mobile Responsiveness */
+    /* Mobile */
     @media (max-width: 600px) {
       .covers, .second-covers {
         gap: 20px;
@@ -122,7 +122,7 @@
       #winnerWord, #winnerLike, #secondResult {
         font-size: 2rem;
       }
-      #playButton {
+      button {
         font-size: 1.2rem;
         padding: 8px 16px;
       }
@@ -167,6 +167,8 @@
 
   <div id="secondResult"></div>
   <div id="secondImage"></div>
+
+  <button id="playAgainButton" onclick="location.reload()">Play Again</button>
 </div>
 
 <!-- Sounds -->
@@ -261,8 +263,10 @@
       sad.play();
       document.getElementById('secondResult').innerHTML = "Oh no, I went Bareback! <br> Uh oh! You lose. Better visit the clinic, big boy. 😬";
       document.getElementById('secondResult').style.display = "block";
-      document.getElementById('secondImage').innerHTML = "<img src='https://i.imgur.com/Dy5tV8G.png' style='width:250px;margin-top:20px;border-radius:15px;'>";
+      document.getElementById('secondImage').innerHTML = "<img src='download-6.jpg' style='width:250px;margin-top:20px;border-radius:15px;'>";
     }
+
+    document.getElementById('playAgainButton').style.display = "inline-block";
   }
 
   function launchFireworks() {
