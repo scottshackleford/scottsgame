@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - FINAL</title>
+  <title>Ultimate Thai Bride Show</title>
   <style>
     body {
       background-color: #000;
@@ -19,6 +19,19 @@
       padding: 10px;
       position: relative;
       z-index: 5;
+    }
+    .title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-top: 20px;
+      animation: bounce 2s infinite;
+      background: linear-gradient(90deg, #ff00cc, #00ccff, #33ff33, #ffcc00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
     }
     .covers, .second-covers {
       display: flex;
@@ -108,6 +121,14 @@
       z-index: 5;
       position: relative;
     }
+    #secondStage {
+      display: none;
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
     /* Mobile */
     @media (max-width: 600px) {
       .covers, .second-covers {
@@ -115,6 +136,9 @@
       }
       .cover-box, .second-cover-box {
         max-width: 80%;
+      }
+      .title {
+        font-size: 2rem;
       }
       #preInstruction, #instruction, #round2Instruction {
         font-size: 1.5rem;
@@ -137,6 +161,7 @@
 <canvas id="fireworks"></canvas>
 
 <div class="container">
+  <div class="title" id="mainTitle">🎲 Welcome to the Ultimate Thai Bride Show! 🎲</div>
   <div id="preInstruction">Click the button to start!</div>
   <button id="playButton" onclick="startGame()">Click here for Round 1</button>
 
@@ -160,7 +185,7 @@
 
   <div id="round2Instruction">Round 2! Pick wisely... 😉</div>
 
-  <div class="second-covers" id="secondStage" style="display: none;">
+  <div class="second-covers" id="secondStage">
     <div class="second-cover-box" onclick="secondReveal('good')">Choose Me</div>
     <div class="second-cover-box" onclick="secondReveal('bad')">Choose Me</div>
   </div>
@@ -196,12 +221,16 @@
       document.getElementById('preInstruction').style.display = "none";
       document.getElementById('instruction').style.display = "block";
       document.getElementById('playButton').style.display = "none";
+      document.getElementById('mainTitle').style.display = "none"; // HIDE title
     } else if (round === 2) {
       document.getElementById('firstStage').style.display = "none";
       document.getElementById('winnerWord').style.display = "none";
       document.getElementById('winnerLike').style.display = "none";
       document.getElementById('round2Instruction').style.display = "block";
-      document.getElementById('secondStage').style.display = "flex";
+      let secondStage = document.getElementById('secondStage');
+      secondStage.style.display = "flex";
+      secondStage.style.visibility = "visible";
+      secondStage.style.opacity = "1";
       document.getElementById('playButton').style.display = "none";
     }
   }
