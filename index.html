@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - Mobile Final Version</title>
+  <title>Choose Your Thai Bride - Final Game</title>
   <style>
     body {
       background-color: #000;
@@ -20,7 +20,7 @@
       z-index: 5;
       padding: 10px;
     }
-    .covers {
+    .covers, .second-covers {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -28,13 +28,13 @@
       gap: 40px;
       flex-wrap: wrap;
     }
-    .cover-box {
+    .cover-box, .second-cover-box {
       position: relative;
       cursor: pointer;
       flex: 1 1 45%;
       max-width: 45%;
     }
-    .cover-box img {
+    .cover-box img, .second-cover-box img {
       width: 100%;
       height: auto;
       border-radius: 15px;
@@ -63,18 +63,13 @@
       font-weight: bold;
       display: none;
     }
-    #winnerWord {
+    #winnerWord, #winnerLike, #secondResult {
       margin-top: 20px;
       font-size: 2.5rem;
       font-weight: bold;
       display: none;
-      color: white;
     }
-    #winnerLike {
-      margin-top: 10px;
-      font-size: 3rem;
-      font-weight: bold;
-      display: none;
+    #winnerLike, #secondResult {
       background: linear-gradient(90deg, #ff00cc, #3333ff, #00ff99, #ffcc00);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -110,17 +105,17 @@
       #preInstruction, #instruction {
         font-size: 1.5rem;
       }
-      #winnerWord, #winnerLike {
+      #winnerWord, #winnerLike, #secondResult {
         font-size: 2rem;
       }
       #playButton {
         font-size: 1.2rem;
         padding: 8px 16px;
       }
-      .covers {
+      .covers, .second-covers {
         gap: 20px;
       }
-      .cover-box {
+      .cover-box, .second-cover-box {
         max-width: 80%;
       }
       .number-label {
@@ -140,7 +135,7 @@
 
   <div id="instruction">Choose your Thai bride! 🇹🇭</div>
 
-  <div class="covers">
+  <div class="covers" id="firstStage">
     <div class="cover-box" onclick="reveal(0)">
       <div class="number-label">1</div>
       <img id="cover0" src="download-3.jpg" alt="Bangkok Cover">
@@ -155,10 +150,25 @@
 
   <div id="winnerWord"></div>
   <div id="winnerLike"></div>
+
+  <div class="second-covers" id="secondStage" style="display: none;">
+    <div class="second-cover-box" onclick="secondReveal('good')">
+      <img src="download-3.jpg" alt="Choose Me">
+      <div style="position:absolute;top:40%;left:0;right:0;color:white;font-size:2rem;font-weight:bold;">Choose Me</div>
+    </div>
+    <div class="second-cover-box" onclick="secondReveal('bad')">
+      <img src="download-3.jpg" alt="Choose Me">
+      <div style="position:absolute;top:40%;left:0;right:0;color:white;font-size:2rem;font-weight:bold;">Choose Me</div>
+    </div>
+  </div>
+
+  <div id="secondResult"></div>
 </div>
 
-<!-- Music -->
+<!-- Sounds -->
 <audio id="music" src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" loop></audio>
+<audio id="cheer" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
+<audio id="sad" src="https://www.soundjay.com/misc/sounds/fail-trombone-01.mp3"></audio>
 
 <script>
   let choices = [
@@ -170,6 +180,8 @@
   let ctx = fireworksCanvas.getContext('2d');
   let alreadyPicked = false;
   let music = document.getElementById('music');
+  let cheer = document.getElementById('cheer');
+  let sad = document.getElementById('sad');
 
   function startGame() {
     fadeInMusic();
@@ -196,33 +208,58 @@
     if (alreadyPicked) return;
     alreadyPicked = true;
 
-    let cover = document.getElementById(`cover${index}`);
+    let cover = document.getElementById(`cover0`);
+    let cover2 = document.getElementById(`cover1`);
     cover.style.opacity = "0";
+    cover2.style.opacity = "0";
 
     setTimeout(() => {
       cover.style.display = "none";
+      cover2.style.display = "none";
 
-      let realImage = document.getElementById(`real${index}`);
-      realImage.style.display = "block";
-      realImage.style.opacity = "0";
-      setTimeout(() => {
-        realImage.style.opacity = "1";
-      }, 50);
+      document.getElementById(`real0`).style.display = (index == 0) ? "block" : "none";
+      document.getElementById(`real1`).style.display = (index == 1) ? "block" : "none";
 
-      // Set winner words
       document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
       document.getElementById('winnerWord').style.display = "block";
+
       document.getElementById('winnerLike').textContent = "You Liiiiike";
       document.getElementById('winnerLike').style.display = "block";
 
       launchFireworks();
+
+      // Move to second stage after 1.5 seconds
+      setTimeout(() => {
+        document.getElementById('firstStage').style.display = "none";
+        document.getElementById('winnerWord').style.display = "none";
+        document.getElementById('winnerLike').style.display = "none";
+        document.getElementById('secondStage').style.display = "flex";
+      }, 1500);
+
     }, 1000);
+  }
+
+  function secondReveal(result) {
+    document.getElementById('secondStage').style.display = "none";
+
+    if (result === "good") {
+      launchFireworks();
+      cheer.play();
+      document.getElementById('secondResult').innerHTML = "Well done! You are a winner! 🎉";
+    } else {
+      sad.play();
+      document.getElementById('secondResult').innerHTML = "Uh oh! You lose. Better visit the clinic, big boy. 😬";
+    }
+    document.getElementById('secondResult').style.display = "block";
   }
 
   function resetGame() {
     alreadyPicked = false;
     document.getElementById('winnerWord').style.display = "none";
     document.getElementById('winnerLike').style.display = "none";
+    document.getElementById('secondResult').style.display = "none";
+    document.getElementById('firstStage').style.display = "flex";
+    document.getElementById('secondStage').style.display = "none";
 
     let covers = [document.getElementById('cover0'), document.getElementById('cover1')];
     let reals = [document.getElementById('real0'), document.getElementById('real1')];
