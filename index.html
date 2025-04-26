@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - Final Edition</title>
+  <title>Choose Your Thai Bride - Fixed Version</title>
   <style>
     body {
       background-color: #000;
@@ -43,8 +43,9 @@
       justify-content: center;
       font-size: 2rem;
       font-weight: bold;
+      color: white;
     }
-    .cover-box img, .second-cover-box img {
+    .cover-box img {
       width: 100%;
       height: auto;
       border-radius: 15px;
@@ -62,15 +63,12 @@
       border-radius: 50%;
       font-weight: bold;
     }
-    #preInstruction {
+    #preInstruction, #instruction, #round2Instruction {
       margin-top: 10px;
       font-size: 2rem;
       font-weight: bold;
     }
     #instruction, #round2Instruction {
-      margin-top: 20px;
-      font-size: 2rem;
-      font-weight: bold;
       display: none;
     }
     #winnerWord, #winnerLike, #secondResult {
@@ -110,7 +108,7 @@
       z-index: 5;
       position: relative;
     }
-    /* Responsive */
+    /* Mobile Responsiveness */
     @media (max-width: 600px) {
       .covers, .second-covers {
         gap: 20px;
@@ -161,6 +159,7 @@
   <div id="winnerLike"></div>
 
   <div id="round2Instruction">Round 2! Pick wisely... 😉</div>
+
   <div class="second-covers" id="secondStage" style="display: none;">
     <div class="second-cover-box" onclick="secondReveal('good')">Choose Me</div>
     <div class="second-cover-box" onclick="secondReveal('bad')">Choose Me</div>
@@ -196,6 +195,9 @@
       document.getElementById('instruction').style.display = "block";
       document.getElementById('playButton').style.display = "none";
     } else if (round === 2) {
+      document.getElementById('firstStage').style.display = "none";
+      document.getElementById('winnerWord').style.display = "none";
+      document.getElementById('winnerLike').style.display = "none";
       document.getElementById('round2Instruction').style.display = "block";
       document.getElementById('secondStage').style.display = "flex";
       document.getElementById('playButton').style.display = "none";
@@ -220,14 +222,12 @@
     if (alreadyPicked) return;
     alreadyPicked = true;
 
-    let cover = document.getElementById('cover0');
-    let cover2 = document.getElementById('cover1');
-    cover.style.opacity = "0";
-    cover2.style.opacity = "0";
+    document.getElementById('cover0').style.opacity = "0";
+    document.getElementById('cover1').style.opacity = "0";
 
     setTimeout(() => {
-      cover.style.display = "none";
-      cover2.style.display = "none";
+      document.getElementById('cover0').style.display = "none";
+      document.getElementById('cover1').style.display = "none";
 
       document.getElementById(`real0`).style.display = (index == 0) ? "block" : "none";
       document.getElementById(`real1`).style.display = (index == 1) ? "block" : "none";
