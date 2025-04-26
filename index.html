@@ -35,24 +35,34 @@
 </head>
 <body>
 
-  <button id="big-button" onclick="startFlashing()">PRESS ME!</button>
+  <button id="big-button">PRESS ME!</button>
   <div id="result"></div>
 
   <script>
     let flashingInterval;
     let choices = ["Midget", "Miner"];
 
+    document.getElementById('big-button').addEventListener('click', startFlashing);
+
     function startFlashing() {
       const resultDiv = document.getElementById('result');
-      let flashing = true;
       let index = 0;
 
       // Start flashing
       flashingInterval = setInterval(() => {
         resultDiv.textContent = choices[index % 2];
         index++;
-      }, 100); // Change every 100 milliseconds
+      }, 100);
 
-      // After 2 seconds, stop flashing and pick one randomly
+      // Stop flashing and pick one after 2 seconds
       setTimeout(() => {
-        clearInterval(fl
+        clearInterval(flashingInterval);
+        let finalChoice = choices[Math.floor(Math.random() * choices.length)];
+        resultDiv.textContent = finalChoice;
+        resultDiv.style.fontSize = "6rem"; // Even bigger font
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>
