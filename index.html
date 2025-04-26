@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - Final Game</title>
+  <title>Choose Your Thai Bride - Final Edition</title>
   <style>
     body {
       background-color: #000;
@@ -16,9 +16,9 @@
     }
     .container {
       margin-top: 20px;
+      padding: 10px;
       position: relative;
       z-index: 5;
-      padding: 10px;
     }
     .covers, .second-covers {
       display: flex;
@@ -33,6 +33,16 @@
       cursor: pointer;
       flex: 1 1 45%;
       max-width: 45%;
+      background: #444;
+      border-radius: 15px;
+      border: 3px solid white;
+      padding: 20px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
     }
     .cover-box img, .second-cover-box img {
       width: 100%;
@@ -57,7 +67,7 @@
       font-size: 2rem;
       font-weight: bold;
     }
-    #instruction {
+    #instruction, #round2Instruction {
       margin-top: 20px;
       font-size: 2rem;
       font-weight: bold;
@@ -100,9 +110,15 @@
       z-index: 5;
       position: relative;
     }
-    /* Responsive for Mobile */
+    /* Responsive */
     @media (max-width: 600px) {
-      #preInstruction, #instruction {
+      .covers, .second-covers {
+        gap: 20px;
+      }
+      .cover-box, .second-cover-box {
+        max-width: 80%;
+      }
+      #preInstruction, #instruction, #round2Instruction {
         font-size: 1.5rem;
       }
       #winnerWord, #winnerLike, #secondResult {
@@ -112,15 +128,8 @@
         font-size: 1.2rem;
         padding: 8px 16px;
       }
-      .covers, .second-covers {
-        gap: 20px;
-      }
-      .cover-box, .second-cover-box {
-        max-width: 80%;
-      }
       .number-label {
         font-size: 1.2rem;
-        padding: 4px 8px;
       }
     }
   </style>
@@ -130,8 +139,8 @@
 <canvas id="fireworks"></canvas>
 
 <div class="container">
-  <div id="preInstruction">Click Start Game to continue!</div>
-  <button id="playButton" onclick="startGame()">Start Game</button>
+  <div id="preInstruction">Click the button to start!</div>
+  <button id="playButton" onclick="startGame()">Click here for Round 1</button>
 
   <div id="instruction">Choose your Thai bride! 🇹🇭</div>
 
@@ -151,18 +160,14 @@
   <div id="winnerWord"></div>
   <div id="winnerLike"></div>
 
+  <div id="round2Instruction">Round 2! Pick wisely... 😉</div>
   <div class="second-covers" id="secondStage" style="display: none;">
-    <div class="second-cover-box" onclick="secondReveal('good')">
-      <img src="download-3.jpg" alt="Choose Me">
-      <div style="position:absolute;top:40%;left:0;right:0;color:white;font-size:2rem;font-weight:bold;">Choose Me</div>
-    </div>
-    <div class="second-cover-box" onclick="secondReveal('bad')">
-      <img src="download-3.jpg" alt="Choose Me">
-      <div style="position:absolute;top:40%;left:0;right:0;color:white;font-size:2rem;font-weight:bold;">Choose Me</div>
-    </div>
+    <div class="second-cover-box" onclick="secondReveal('good')">Choose Me</div>
+    <div class="second-cover-box" onclick="secondReveal('bad')">Choose Me</div>
   </div>
 
   <div id="secondResult"></div>
+  <div id="secondImage"></div>
 </div>
 
 <!-- Sounds -->
@@ -175,19 +180,26 @@
     { word: "Midget", image: "download.jpg" },
     { word: "Minor", image: "download-1.jpg" }
   ];
-
   let fireworksCanvas = document.getElementById('fireworks');
   let ctx = fireworksCanvas.getContext('2d');
-  let alreadyPicked = false;
   let music = document.getElementById('music');
   let cheer = document.getElementById('cheer');
   let sad = document.getElementById('sad');
 
+  let round = 1;
+  let alreadyPicked = false;
+
   function startGame() {
-    fadeInMusic();
-    resetGame();
-    document.getElementById('preInstruction').style.display = "none";
-    document.getElementById('instruction').style.display = "block";
+    if (round === 1) {
+      fadeInMusic();
+      document.getElementById('preInstruction').style.display = "none";
+      document.getElementById('instruction').style.display = "block";
+      document.getElementById('playButton').style.display = "none";
+    } else if (round === 2) {
+      document.getElementById('round2Instruction').style.display = "block";
+      document.getElementById('secondStage').style.display = "flex";
+      document.getElementById('playButton').style.display = "none";
+    }
   }
 
   function fadeInMusic() {
@@ -208,8 +220,8 @@
     if (alreadyPicked) return;
     alreadyPicked = true;
 
-    let cover = document.getElementById(`cover0`);
-    let cover2 = document.getElementById(`cover1`);
+    let cover = document.getElementById('cover0');
+    let cover2 = document.getElementById('cover1');
     cover.style.opacity = "0";
     cover2.style.opacity = "0";
 
@@ -222,59 +234,35 @@
 
       document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
       document.getElementById('winnerWord').style.display = "block";
-
-      document.getElementById('winnerLike').textContent = "You Liiiiike";
+      document.getElementById('winnerLike').textContent = "You Liiiiike!";
       document.getElementById('winnerLike').style.display = "block";
 
       launchFireworks();
 
-      // Move to second stage after 1.5 seconds
       setTimeout(() => {
-        document.getElementById('firstStage').style.display = "none";
-        document.getElementById('winnerWord').style.display = "none";
-        document.getElementById('winnerLike').style.display = "none";
-        document.getElementById('secondStage').style.display = "flex";
-      }, 1500);
-
+        document.getElementById('playButton').style.display = "inline-block";
+        document.getElementById('playButton').innerText = "Click here for Round 2";
+        round = 2;
+      }, 2000);
     }, 1000);
   }
 
   function secondReveal(result) {
     document.getElementById('secondStage').style.display = "none";
+    document.getElementById('round2Instruction').style.display = "none";
 
     if (result === "good") {
       launchFireworks();
       cheer.play();
-      document.getElementById('secondResult').innerHTML = "Well done! You are a winner! 🎉";
+      document.getElementById('secondResult').innerHTML = "Used a Condom! <br> Well done! You are a winner! 🎉";
+      document.getElementById('secondResult').style.display = "block";
+      document.getElementById('secondImage').innerHTML = "<img src='download-4.jpg' style='width:250px;margin-top:20px;border-radius:15px;'>";
     } else {
       sad.play();
-      document.getElementById('secondResult').innerHTML = "Uh oh! You lose. Better visit the clinic, big boy. 😬";
+      document.getElementById('secondResult').innerHTML = "Oh no, I went Bareback! <br> Uh oh! You lose. Better visit the clinic, big boy. 😬";
+      document.getElementById('secondResult').style.display = "block";
+      document.getElementById('secondImage').innerHTML = "<img src='https://i.imgur.com/Dy5tV8G.png' style='width:250px;margin-top:20px;border-radius:15px;'>";
     }
-    document.getElementById('secondResult').style.display = "block";
-  }
-
-  function resetGame() {
-    alreadyPicked = false;
-    document.getElementById('winnerWord').style.display = "none";
-    document.getElementById('winnerLike').style.display = "none";
-    document.getElementById('secondResult').style.display = "none";
-    document.getElementById('firstStage').style.display = "flex";
-    document.getElementById('secondStage').style.display = "none";
-
-    let covers = [document.getElementById('cover0'), document.getElementById('cover1')];
-    let reals = [document.getElementById('real0'), document.getElementById('real1')];
-
-    covers.forEach(c => {
-      c.style.display = "block";
-      c.style.opacity = "1";
-    });
-
-    reals.forEach(r => {
-      r.style.display = "none";
-      r.style.opacity = "1";
-    });
-
-    document.body.style.backgroundColor = "#000";
   }
 
   function launchFireworks() {
