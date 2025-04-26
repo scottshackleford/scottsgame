@@ -15,7 +15,7 @@
       overflow: hidden;
     }
     .container {
-      margin-top: 30px;
+      margin-top: 20px;
       position: relative;
       z-index: 5;
     }
@@ -37,16 +37,30 @@
       border: 3px solid white;
       transition: opacity 1s ease;
     }
-    #instruction {
-      margin-top: 30px;
+    #preInstruction {
+      margin-top: 10px;
       font-size: 2rem;
       font-weight: bold;
     }
-    #winnerWord {
+    #instruction {
       margin-top: 20px;
-      font-size: 3rem;
+      font-size: 2rem;
       font-weight: bold;
       display: none;
+    }
+    #winnerWord {
+      margin-top: 20px;
+      font-size: 4rem;
+      font-weight: bold;
+      display: none;
+      background: linear-gradient(90deg, #ff00cc, #3333ff, #00ff99, #ffcc00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 3s linear infinite;
+    }
+    @keyframes rainbow {
+      0% {background-position: 0%;}
+      100% {background-position: 100%;}
     }
     #fireworks {
       position: fixed;
@@ -76,6 +90,7 @@
 <canvas id="fireworks"></canvas>
 
 <div class="container">
+  <div id="preInstruction">Click Start Game to continue!</div>
   <button id="playButton" onclick="startGame()">Start Game</button>
 
   <div id="instruction">Choose your Thai bride! 🇹🇭</div>
@@ -111,6 +126,8 @@
   function startGame() {
     fadeInMusic();
     resetGame();
+    document.getElementById('preInstruction').style.display = "none";
+    document.getElementById('instruction').style.display = "block";
   }
 
   function fadeInMusic() {
@@ -124,33 +141,31 @@
       } else {
         clearInterval(fade);
       }
-    }, 100); // Increases volume every 100ms
+    }, 100);
   }
 
   function reveal(index) {
     if (alreadyPicked) return;
     alreadyPicked = true;
 
-    // Fade out cover
     let cover = document.getElementById(`cover${index}`);
     cover.style.opacity = "0";
-    
+
     setTimeout(() => {
       cover.style.display = "none";
-      
-      // Fade in real image
+
       let realImage = document.getElementById(`real${index}`);
       realImage.style.display = "block";
       realImage.style.opacity = "0";
       setTimeout(() => {
         realImage.style.opacity = "1";
       }, 50);
-      
-      document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
+
+      document.getElementById('winnerWord').textContent = "You Liiiiike 🎉";
       document.getElementById('winnerWord').style.display = "block";
 
       launchFireworks();
-    }, 1000); // Wait for fade out animation
+    }, 1000);
   }
 
   function resetGame() {
