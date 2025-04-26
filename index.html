@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Midget or Miner Game</title>
+  <title>Midget or Miner - Auto Version</title>
   <style>
     body {
       background-color: #000;
@@ -15,54 +15,17 @@
       height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
-    }
-    #big-button {
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 30px 60px;
-      font-size: 2rem;
-      border-radius: 15px;
-      cursor: pointer;
-      margin-top: 20px;
+      overflow: hidden;
     }
     #result {
-      margin-top: 50px;
       font-size: 4rem;
       text-align: center;
+      transition: transform 0.1s ease;
     }
-  </style>
-</head>
-<body>
-
-  <button id="big-button">PRESS ME!</button>
-  <div id="result"></div>
-
-  <script>
-    let flashingInterval;
-    let choices = ["Midget", "Miner"];
-
-    document.getElementById('big-button').addEventListener('click', startFlashing);
-
-    function startFlashing() {
-      const resultDiv = document.getElementById('result');
-      let index = 0;
-
-      // Start flashing
-      flashingInterval = setInterval(() => {
-        resultDiv.textContent = choices[index % 2];
-        index++;
-      }, 100);
-
-      // Stop flashing and pick one after 2 seconds
-      setTimeout(() => {
-        clearInterval(flashingInterval);
-        let finalChoice = choices[Math.floor(Math.random() * choices.length)];
-        resultDiv.textContent = finalChoice;
-        resultDiv.style.fontSize = "6rem"; // Even bigger font
-      }, 2000);
+    .shake {
+      animation: shake 0.1s infinite;
     }
-  </script>
-
-</body>
-</html>
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      25% { transform: translate(-1px, 2px) rotate(-1deg); }
+      50% { transform: translate(2px, -1px) rotate
