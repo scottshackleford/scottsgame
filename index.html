@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Midget or Miner - Final Version</title>
+  <title>Midget or Miner - Working Version</title>
   <style>
     body {
       background-color: #000;
@@ -47,9 +47,11 @@
 
   <script>
     let flashingInterval;
+
+    // Using placeholder images so it works immediately
     let choices = [
-      { word: "Midget", image: "./download.jpg" },
-      { word: "Miner", image: "./download-1.jpg" }
+      { word: "Midget", image: "https://via.placeholder.com/300x400?text=Midget" },
+      { word: "Miner", image: "https://via.placeholder.com/300x400?text=Miner" }
     ];
 
     function startFlashing() {
@@ -59,7 +61,7 @@
       let flashSpeed = 50; // flashes every 50ms
 
       resultDiv.classList.add('shake'); // Start shaking
-      photo.style.display = "none"; // Hide the image during flashing
+      photo.style.display = "none"; // Hide image during flashing
 
       flashingInterval = setInterval(() => {
         let randomChoice = choices[Math.floor(Math.random() * choices.length)];
@@ -77,7 +79,7 @@
         resultDiv.style.transform = "scale(1.2)";
 
         photo.src = finalChoice.image;
-        photo.style.display = "block"; // Show the image
+        photo.style.display = "block"; // Show image
       }, duration);
     }
 
