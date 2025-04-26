@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - Mobile Friendly</title>
+  <title>Choose Your Thai Bride - Mobile Final Version</title>
   <style>
     body {
       background-color: #000;
@@ -41,6 +41,17 @@
       border: 3px solid white;
       transition: opacity 1s ease;
     }
+    .number-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: red;
+      color: white;
+      font-size: 1.5rem;
+      padding: 5px 10px;
+      border-radius: 50%;
+      font-weight: bold;
+    }
     #preInstruction {
       margin-top: 10px;
       font-size: 2rem;
@@ -54,6 +65,13 @@
     }
     #winnerWord {
       margin-top: 20px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      display: none;
+      color: white;
+    }
+    #winnerLike {
+      margin-top: 10px;
       font-size: 3rem;
       font-weight: bold;
       display: none;
@@ -87,13 +105,13 @@
       z-index: 5;
       position: relative;
     }
-    /* Smaller text and button on mobile */
+    /* Responsive for Mobile */
     @media (max-width: 600px) {
       #preInstruction, #instruction {
         font-size: 1.5rem;
       }
-      #winnerWord {
-        font-size: 2.5rem;
+      #winnerWord, #winnerLike {
+        font-size: 2rem;
       }
       #playButton {
         font-size: 1.2rem;
@@ -104,6 +122,10 @@
       }
       .cover-box {
         max-width: 80%;
+      }
+      .number-label {
+        font-size: 1.2rem;
+        padding: 4px 8px;
       }
     }
   </style>
@@ -120,16 +142,19 @@
 
   <div class="covers">
     <div class="cover-box" onclick="reveal(0)">
+      <div class="number-label">1</div>
       <img id="cover0" src="download-3.jpg" alt="Bangkok Cover">
       <img id="real0" src="download.jpg" alt="Midget" style="display: none;">
     </div>
     <div class="cover-box" onclick="reveal(1)">
+      <div class="number-label">2</div>
       <img id="cover1" src="download-3.jpg" alt="Bangkok Cover">
       <img id="real1" src="download-1.jpg" alt="Minor" style="display: none;">
     </div>
   </div>
 
   <div id="winnerWord"></div>
+  <div id="winnerLike"></div>
 </div>
 
 <!-- Music -->
@@ -184,8 +209,11 @@
         realImage.style.opacity = "1";
       }, 50);
 
-      document.getElementById('winnerWord').textContent = "You Liiiiike 🎉";
+      // Set winner words
+      document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
       document.getElementById('winnerWord').style.display = "block";
+      document.getElementById('winnerLike').textContent = "You Liiiiike";
+      document.getElementById('winnerLike').style.display = "block";
 
       launchFireworks();
     }, 1000);
@@ -194,6 +222,7 @@
   function resetGame() {
     alreadyPicked = false;
     document.getElementById('winnerWord').style.display = "none";
+    document.getElementById('winnerLike').style.display = "none";
 
     let covers = [document.getElementById('cover0'), document.getElementById('cover1')];
     let reals = [document.getElementById('real0'), document.getElementById('real1')];
