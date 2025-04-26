@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Midget or Miner - Super Deluxe FIXED</title>
+  <title>Midget or Minor - Game Show</title>
   <style>
     body {
       background-color: #000;
@@ -18,7 +18,7 @@
     .container {
       margin-top: 30px;
       position: relative;
-      z-index: 5; /* Make winner text stay on top */
+      z-index: 5;
     }
     .images {
       display: flex;
@@ -45,8 +45,8 @@
       z-index: 5;
     }
     #winner {
-      margin-top: 40px;
-      font-size: 4rem;
+      margin-top: 20px;
+      font-size: 3rem;
       font-weight: bold;
       display: none;
       position: relative;
@@ -59,7 +59,7 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 1; /* Fireworks BEHIND everything */
+      z-index: 1;
     }
     #playButton {
       margin-top: 20px;
@@ -73,6 +73,11 @@
       z-index: 5;
       position: relative;
     }
+    #introText {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -80,24 +85,28 @@
   <canvas id="fireworks"></canvas>
 
   <div class="container">
-    <button id="playButton" onclick="startGame()">Play Again</button>
+    <button id="playButton" onclick="startIntro()">Start Game</button>
+
+    <div id="introText">Welcome to the brand new game show: Midget or Minor! 🎉</div>
 
     <div class="images" id="imageContainer">
       <img id="img1" src="download.jpg" alt="Midget">
-      <img id="img2" src="download-1.jpg" alt="Miner">
+      <img id="img2" src="download-1.jpg" alt="Minor">
     </div>
 
     <div id="arrow">⬆️</div>
     <div id="winner"></div>
   </div>
 
+  <!-- Sounds -->
+  <audio id="introVoice" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> <!-- Placeholder voice -->
   <audio id="drumroll" src="https://www.soundjay.com/misc/sounds/drum-roll-1.mp3"></audio>
   <audio id="victory" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
 
   <script>
     let choices = [
       { word: "Midget", image: "download.jpg" },
-      { word: "Miner", image: "download-1.jpg" }
+      { word: "Minor", image: "download-1.jpg" }
     ];
 
     let arrow = document.getElementById('arrow');
@@ -109,12 +118,27 @@
     let fireworksCanvas = document.getElementById('fireworks');
     let ctx = fireworksCanvas.getContext('2d');
 
+    let introVoice = document.getElementById('introVoice');
     let drumroll = document.getElementById('drumroll');
     let victory = document.getElementById('victory');
+    let introText = document.getElementById('introText');
 
     let arrowInterval;
     let colorInterval;
     let pointingLeft = true;
+
+    function startIntro() {
+      playButton.disabled = true;
+      introText.style.display = "block";
+      introVoice.play();
+
+      // After intro audio ends, start real game
+      introVoice.onended = function() {
+        startGame();
+        playButton.innerText = "Play Again";
+        playButton.disabled = false;
+      }
+    }
 
     function startGame() {
       // Reset
@@ -125,6 +149,7 @@
       img2.style.display = "block";
       arrow.style.transform = "rotate(0deg)";
       pointingLeft = true;
+      introText.style.display = "none";
       document.body.style.backgroundColor = "#000";
 
       drumroll.currentTime = 0;
@@ -169,7 +194,7 @@
         img2.style.display = "block";
       }
 
-      winnerDiv.textContent = `WINNER: ${finalChoice.word}! 🎉`;
+      winnerDiv.textContent = `${finalChoice.word}! 🎉`;
       winnerDiv.style.display = "block";
 
       victory.currentTime = 0;
