@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride - Bangkok Version</title>
+  <title>Choose Your Thai Bride - Bangkok Edition</title>
   <style>
     body {
       background-color: #000;
@@ -35,6 +35,7 @@
       height: auto;
       border-radius: 15px;
       border: 3px solid white;
+      transition: opacity 1s ease;
     }
     #instruction {
       margin-top: 30px;
@@ -70,12 +71,12 @@
     }
   </style>
 </head>
-<body onload="playMusic()">
+<body>
 
 <canvas id="fireworks"></canvas>
 
 <div class="container">
-  <button id="playButton" onclick="resetGame()">Play Again</button>
+  <button id="playButton" onclick="startGame()">Start Game</button>
 
   <div id="instruction">Choose your Thai bride! 🇹🇭</div>
 
@@ -105,36 +106,70 @@
   let fireworksCanvas = document.getElementById('fireworks');
   let ctx = fireworksCanvas.getContext('2d');
   let alreadyPicked = false;
+  let music = document.getElementById('music');
 
-  function playMusic() {
-    let music = document.getElementById('music');
-    music.volume = 0.5;
+  function startGame() {
+    fadeInMusic();
+    resetGame();
+  }
+
+  function fadeInMusic() {
+    music.volume = 0;
     music.play();
+    let volume = 0;
+    let fade = setInterval(() => {
+      if (volume < 0.5) {
+        volume += 0.01;
+        music.volume = volume;
+      } else {
+        clearInterval(fade);
+      }
+    }, 100); // Increases volume every 100ms
   }
 
   function reveal(index) {
     if (alreadyPicked) return;
     alreadyPicked = true;
 
-    document.getElementById(`cover0`).style.display = (index === 0) ? "none" : "block";
-    document.getElementById(`cover1`).style.display = (index === 1) ? "none" : "block";
+    // Fade out cover
+    let cover = document.getElementById(`cover${index}`);
+    cover.style.opacity = "0";
+    
+    setTimeout(() => {
+      cover.style.display = "none";
+      
+      // Fade in real image
+      let realImage = document.getElementById(`real${index}`);
+      realImage.style.display = "block";
+      realImage.style.opacity = "0";
+      setTimeout(() => {
+        realImage.style.opacity = "1";
+      }, 50);
+      
+      document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
+      document.getElementById('winnerWord').style.display = "block";
 
-    document.getElementById(`real0`).style.display = (index === 0) ? "block" : "none";
-    document.getElementById(`real1`).style.display = (index === 1) ? "block" : "none";
-
-    document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
-    document.getElementById('winnerWord').style.display = "block";
-
-    launchFireworks();
+      launchFireworks();
+    }, 1000); // Wait for fade out animation
   }
 
   function resetGame() {
     alreadyPicked = false;
     document.getElementById('winnerWord').style.display = "none";
-    document.getElementById('cover0').style.display = "block";
-    document.getElementById('cover1').style.display = "block";
-    document.getElementById('real0').style.display = "none";
-    document.getElementById('real1').style.display = "none";
+
+    let covers = [document.getElementById('cover0'), document.getElementById('cover1')];
+    let reals = [document.getElementById('real0'), document.getElementById('real1')];
+
+    covers.forEach(c => {
+      c.style.display = "block";
+      c.style.opacity = "1";
+    });
+
+    reals.forEach(r => {
+      r.style.display = "none";
+      r.style.opacity = "1";
+    });
+
     document.body.style.backgroundColor = "#000";
   }
 
