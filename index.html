@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Choose Your Thai Bride</title>
+  <title>Choose Your Thai Bride - Bangkok Version</title>
   <style>
     body {
       background-color: #000;
@@ -31,7 +31,7 @@
       cursor: pointer;
     }
     .cover-box img {
-      width: 200px;
+      width: 250px;
       height: auto;
       border-radius: 15px;
       border: 3px solid white;
@@ -70,7 +70,7 @@
     }
   </style>
 </head>
-<body>
+<body onload="playMusic()">
 
 <canvas id="fireworks"></canvas>
 
@@ -81,17 +81,20 @@
 
   <div class="covers">
     <div class="cover-box" onclick="reveal(0)">
-      <img id="cover0" src="https://i.imgur.com/2Z9Z5lP.png" alt="Gift Box">
+      <img id="cover0" src="download-3.jpg" alt="Bangkok Cover">
       <img id="real0" src="download.jpg" alt="Midget" style="display: none;">
     </div>
     <div class="cover-box" onclick="reveal(1)">
-      <img id="cover1" src="https://i.imgur.com/2Z9Z5lP.png" alt="Gift Box">
+      <img id="cover1" src="download-3.jpg" alt="Bangkok Cover">
       <img id="real1" src="download-1.jpg" alt="Minor" style="display: none;">
     </div>
   </div>
 
   <div id="winnerWord"></div>
 </div>
+
+<!-- Music -->
+<audio id="music" src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" loop></audio>
 
 <script>
   let choices = [
@@ -103,17 +106,22 @@
   let ctx = fireworksCanvas.getContext('2d');
   let alreadyPicked = false;
 
+  function playMusic() {
+    let music = document.getElementById('music');
+    music.volume = 0.5;
+    music.play();
+  }
+
   function reveal(index) {
     if (alreadyPicked) return;
     alreadyPicked = true;
 
-    // Hide cover
-    document.getElementById(`cover${index}`).style.display = "none";
-    // Show real image
+    document.getElementById(`cover0`).style.display = (index === 0) ? "none" : "block";
+    document.getElementById(`cover1`).style.display = (index === 1) ? "none" : "block";
+
     document.getElementById(`real0`).style.display = (index === 0) ? "block" : "none";
     document.getElementById(`real1`).style.display = (index === 1) ? "block" : "none";
 
-    // Show winner word
     document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
     document.getElementById('winnerWord').style.display = "block";
 
@@ -123,8 +131,6 @@
   function resetGame() {
     alreadyPicked = false;
     document.getElementById('winnerWord').style.display = "none";
-
-    // Reset covers and real images
     document.getElementById('cover0').style.display = "block";
     document.getElementById('cover1').style.display = "block";
     document.getElementById('real0').style.display = "none";
