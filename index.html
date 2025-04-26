@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Midget or Minor - Game Show</title>
+  <title>Choose Your Thai Bride</title>
   <style>
     body {
       background-color: #000;
@@ -13,44 +13,39 @@
       padding: 0;
       text-align: center;
       overflow: hidden;
-      transition: background-color 0.3s;
     }
     .container {
       margin-top: 30px;
       position: relative;
       z-index: 5;
     }
-    .images {
+    .covers {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 20px;
       gap: 60px;
-      z-index: 5;
-      position: relative;
     }
-    .images img {
+    .cover-box {
+      position: relative;
+      cursor: pointer;
+    }
+    .cover-box img {
       width: 200px;
       height: auto;
       border-radius: 15px;
       border: 3px solid white;
     }
-    #arrow {
-      font-size: 4rem;
-      margin-top: 20px;
-      height: 60px;
-      transform-origin: bottom center;
-      transition: transform 0.2s ease;
-      position: relative;
-      z-index: 5;
+    #instruction {
+      margin-top: 30px;
+      font-size: 2rem;
+      font-weight: bold;
     }
-    #winner {
+    #winnerWord {
       margin-top: 20px;
       font-size: 3rem;
       font-weight: bold;
       display: none;
-      position: relative;
-      z-index: 5;
     }
     #fireworks {
       position: fixed;
@@ -73,187 +68,113 @@
       z-index: 5;
       position: relative;
     }
-    #introText {
-      margin-top: 20px;
-      font-size: 1.5rem;
-      display: none;
-    }
   </style>
 </head>
 <body>
 
-  <canvas id="fireworks"></canvas>
+<canvas id="fireworks"></canvas>
 
-  <div class="container">
-    <button id="playButton" onclick="startIntro()">Start Game</button>
+<div class="container">
+  <button id="playButton" onclick="resetGame()">Play Again</button>
 
-    <div id="introText">Welcome to the brand new game show: Midget or Minor! 🎉</div>
+  <div id="instruction">Choose your Thai bride! 🇹🇭</div>
 
-    <div class="images" id="imageContainer">
-      <img id="img1" src="download.jpg" alt="Midget">
-      <img id="img2" src="download-1.jpg" alt="Minor">
+  <div class="covers">
+    <div class="cover-box" onclick="reveal(0)">
+      <img id="cover0" src="https://i.imgur.com/2Z9Z5lP.png" alt="Gift Box">
+      <img id="real0" src="download.jpg" alt="Midget" style="display: none;">
     </div>
-
-    <div id="arrow">⬆️</div>
-    <div id="winner"></div>
+    <div class="cover-box" onclick="reveal(1)">
+      <img id="cover1" src="https://i.imgur.com/2Z9Z5lP.png" alt="Gift Box">
+      <img id="real1" src="download-1.jpg" alt="Minor" style="display: none;">
+    </div>
   </div>
 
-  <!-- Sounds -->
-  <audio id="introVoice" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> <!-- Placeholder voice -->
-  <audio id="drumroll" src="https://www.soundjay.com/misc/sounds/drum-roll-1.mp3"></audio>
-  <audio id="victory" src="https://www.soundjay.com/human/sounds/applause-8.mp3"></audio>
+  <div id="winnerWord"></div>
+</div>
 
-  <script>
-    let choices = [
-      { word: "Midget", image: "download.jpg" },
-      { word: "Minor", image: "download-1.jpg" }
-    ];
+<script>
+  let choices = [
+    { word: "Midget", image: "download.jpg" },
+    { word: "Minor", image: "download-1.jpg" }
+  ];
 
-    let arrow = document.getElementById('arrow');
-    let winnerDiv = document.getElementById('winner');
-    let img1 = document.getElementById('img1');
-    let img2 = document.getElementById('img2');
-    let imageContainer = document.getElementById('imageContainer');
-    let playButton = document.getElementById('playButton');
-    let fireworksCanvas = document.getElementById('fireworks');
-    let ctx = fireworksCanvas.getContext('2d');
+  let fireworksCanvas = document.getElementById('fireworks');
+  let ctx = fireworksCanvas.getContext('2d');
+  let alreadyPicked = false;
 
-    let introVoice = document.getElementById('introVoice');
-    let drumroll = document.getElementById('drumroll');
-    let victory = document.getElementById('victory');
-    let introText = document.getElementById('introText');
+  function reveal(index) {
+    if (alreadyPicked) return;
+    alreadyPicked = true;
 
-    let arrowInterval;
-    let colorInterval;
-    let pointingLeft = true;
+    // Hide cover
+    document.getElementById(`cover${index}`).style.display = "none";
+    // Show real image
+    document.getElementById(`real0`).style.display = (index === 0) ? "block" : "none";
+    document.getElementById(`real1`).style.display = (index === 1) ? "block" : "none";
 
-    function startIntro() {
-      playButton.disabled = true;
-      introText.style.display = "block";
-      introVoice.play();
+    // Show winner word
+    document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
+    document.getElementById('winnerWord').style.display = "block";
 
-      // After intro audio ends, start real game
-      introVoice.onended = function() {
-        startGame();
-        playButton.innerText = "Play Again";
-        playButton.disabled = false;
+    launchFireworks();
+  }
+
+  function resetGame() {
+    alreadyPicked = false;
+    document.getElementById('winnerWord').style.display = "none";
+
+    // Reset covers and real images
+    document.getElementById('cover0').style.display = "block";
+    document.getElementById('cover1').style.display = "block";
+    document.getElementById('real0').style.display = "none";
+    document.getElementById('real1').style.display = "none";
+    document.body.style.backgroundColor = "#000";
+  }
+
+  function launchFireworks() {
+    fireworksCanvas.style.display = "block";
+    fireworksCanvas.width = window.innerWidth;
+    fireworksCanvas.height = window.innerHeight;
+
+    let particles = [];
+
+    for (let i = 0; i < 100; i++) {
+      particles.push({
+        x: fireworksCanvas.width / 2,
+        y: fireworksCanvas.height / 2,
+        speedX: (Math.random() - 0.5) * 10,
+        speedY: (Math.random() - 0.5) * 10,
+        radius: Math.random() * 3 + 2,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`
+      });
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.radius *= 0.96;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+
+      particles = particles.filter(p => p.radius > 0.5);
+
+      if (particles.length > 0) {
+        requestAnimationFrame(animate);
       }
     }
 
-    function startGame() {
-      // Reset
-      winnerDiv.style.display = "none";
-      fireworksCanvas.style.display = "none";
-      imageContainer.style.display = "flex";
-      img1.style.display = "block";
-      img2.style.display = "block";
-      arrow.style.transform = "rotate(0deg)";
-      pointingLeft = true;
-      introText.style.display = "none";
-      document.body.style.backgroundColor = "#000";
-
-      drumroll.currentTime = 0;
-      drumroll.play();
-
-      // Flash background colors
-      colorInterval = setInterval(() => {
-        document.body.style.backgroundColor = getRandomColor();
-      }, 200);
-
-      // Arrow starts pivoting
-      arrowInterval = setInterval(() => {
-        if (pointingLeft) {
-          arrow.style.transform = "rotate(-30deg)";
-        } else {
-          arrow.style.transform = "rotate(30deg)";
-        }
-        pointingLeft = !pointingLeft;
-      }, 100);
-
-      // After 4 seconds, pick a winner
-      setTimeout(() => {
-        clearInterval(arrowInterval);
-        clearInterval(colorInterval);
-        document.body.style.backgroundColor = "#000";
-        pickWinner();
-      }, 4000);
-    }
-
-    function pickWinner() {
-      drumroll.pause();
-
-      let randomIndex = Math.floor(Math.random() * choices.length);
-      let finalChoice = choices[randomIndex];
-
-      // Show only the winning image
-      if (randomIndex === 0) {
-        img1.style.display = "block";
-        img2.style.display = "none";
-      } else {
-        img1.style.display = "none";
-        img2.style.display = "block";
-      }
-
-      winnerDiv.textContent = `${finalChoice.word}! 🎉`;
-      winnerDiv.style.display = "block";
-
-      victory.currentTime = 0;
-      victory.play();
-      launchFireworks();
-    }
-
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
-
-    function launchFireworks() {
-      fireworksCanvas.style.display = "block";
-      fireworksCanvas.width = window.innerWidth;
-      fireworksCanvas.height = window.innerHeight;
-
-      let particles = [];
-
-      for (let i = 0; i < 100; i++) {
-        particles.push({
-          x: fireworksCanvas.width / 2,
-          y: fireworksCanvas.height / 2,
-          speedX: (Math.random() - 0.5) * 10,
-          speedY: (Math.random() - 0.5) * 10,
-          radius: Math.random() * 3 + 2,
-          color: `hsl(${Math.random() * 360}, 100%, 50%)`
-        });
-      }
-
-      function animate() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-        ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
-
-        particles.forEach(p => {
-          p.x += p.speedX;
-          p.y += p.speedY;
-          p.radius *= 0.96;
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.fill();
-        });
-
-        particles = particles.filter(p => p.radius > 0.5);
-
-        if (particles.length > 0) {
-          requestAnimationFrame(animate);
-        }
-      }
-
-      animate();
-    }
-  </script>
+    animate();
+  }
+</script>
 
 </body>
 </html>
