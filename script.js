@@ -1,7 +1,6 @@
 // script.js
 
 let selectedPlayer = null;
-let selectedLady = null;
 
 const gameContainer = document.getElementById('game-container');
 const choiceContainer = document.getElementById('choice-container');
@@ -9,18 +8,19 @@ const messageContainer = document.getElementById('message-container');
 const backgroundMusic = document.getElementById('background-music');
 
 function startGame() {
-    showPlayerChoices();
-}
-
-function showPlayerChoices() {
-    document.body.style.backgroundImage = '';
+    selectedPlayer = null; // reset selected player
+    document.body.style.backgroundImage = ''; // remove any background images
     backgroundMusic.src = "assets/gameshow-music.mp3";
+    backgroundMusic.loop = true;
     backgroundMusic.play();
 
-    messageContainer.innerHTML = "Choose your player:";
-    choiceContainer.innerHTML = `
-        <img src="assets/luke.png" class="choice-image" alt="Luke" onclick="selectPlayer('luke')">
-        <img src="assets/adam.png" class="choice-image" alt="Adam" onclick="selectPlayer('adam')">
+    gameContainer.innerHTML = `
+        <img id="top-image" src="assets/game.png" alt="Game Start">
+        <div id="message-container">Choose your player:</div>
+        <div id="choice-container">
+            <img src="assets/luke.png" class="choice-image" alt="Luke" onclick="selectPlayer('luke')">
+            <img src="assets/adam.png" class="choice-image" alt="Adam" onclick="selectPlayer('adam')">
+        </div>
     `;
 }
 
@@ -30,47 +30,49 @@ function selectPlayer(player) {
 }
 
 function showPatpongScene() {
-    messageContainer.innerHTML = "Welcome to Patpong Nightmarket. You had a great time and stumbled across a couple of ladies to take back to your hotel room.";
-    choiceContainer.innerHTML = `
-        <img src="assets/midget.png" class="choice-image" alt="Midget" onclick="selectLady('lady')">
-        <img src="assets/minor.png" class="choice-image" alt="Minor" onclick="selectLady('lady')">
-        <div>
-            <img src="assets/home.png" class="button-image" alt="Go Home Alone" onclick="goHomeAlone()">
-        </div>
-    `;
+    if (selectedPlayer === 'luke') {
+        winGame("good-boy");
+    } else {
+        // Adam picked - normal Patpong story
+        gameContainer.innerHTML = `
+            <img id="top-image" src="assets/game.png" alt="Game Start">
+            <div id="message-container">Welcome to Patpong Nightmarket. You had a great time and stumbled across a couple of ladies to take back to your hotel room.</div>
+            <div id="choice-container">
+                <img src="assets/midget.png" class="choice-image" alt="Midget" onclick="selectLady()">
+                <img src="assets/minor.png" class="choice-image" alt="Minor" onclick="selectLady()">
+                <div>
+                    <img src="assets/home.png" class="button-image" alt="Go Home Alone" onclick="goHomeAlone()">
+                </div>
+            </div>
+        `;
+    }
 }
 
-function selectLady(lady) {
-    selectedLady = lady;
+function selectLady() {
     showProtectionChoice();
 }
 
 function showProtectionChoice() {
-    messageContainer.innerHTML = "Do you want to play it safe?";
-    choiceContainer.innerHTML = `
-        <img src="assets/johnny.png" class="choice-image" alt="Johnny" onclick="chooseProtection('johnny')">
-        <img src="assets/bare.png" class="choice-image" alt="Bare" onclick="chooseProtection('bare')">
+    gameContainer.innerHTML = `
+        <img id="top-image" src="assets/game.png" alt="Game Start">
+        <div id="message-container">Do you want to play it safe?</div>
+        <div id="choice-container">
+            <img src="assets/johnny.png" class="choice-image" alt="Johnny" onclick="chooseProtection('johnny')">
+            <img src="assets/bare.png" class="choice-image" alt="Bare" onclick="chooseProtection('bare')">
+        </div>
     `;
 }
 
 function chooseProtection(option) {
-    if (selectedPlayer === 'luke') {
-        winGame("win-safe");
+    if (option === 'johnny') {
+        winGame("safe");
     } else {
-        if (option === 'johnny') {
-            winGame("win-safe");
-        } else {
-            loseGame();
-        }
+        loseGame();
     }
 }
 
 function goHomeAlone() {
-    if (selectedPlayer === 'luke') {
-        winGame("win");
-    } else {
-        loseGame();
-    }
+    loseGame(); // Going home alone with Adam is treated as a loss
 }
 
 function winGame(type) {
@@ -80,12 +82,18 @@ function winGame(type) {
     document.body.style.backgroundPosition = "center";
     document.body.style.backgroundRepeat = "no-repeat";
 
-    let winMessage = (type === "win-safe") 
-        ? "🎉 YOU PLAYED IT SAFE AND DON'T HAVE A ROTTING WILLY! 🎉" 
-        : "🎉 YOU ARE A WINNER! 🎉";
+    let winMessage = "";
+
+    if (type === "good-boy") {
+        winMessage = "🎉 You are a good boy and had a pocket for rubbers, no rotting willy for you! 🎉";
+    } else if (type === "safe") {
+        winMessage = "🎉 YOU PLAYED IT SAFE AND DON'T HAVE A ROTTING WILLY! 🎉";
+    } else {
+        winMessage = "🎉 YOU ARE A WINNER! 🎉";
+    }
 
     gameContainer.innerHTML = `
-        <h1 style="font-size: 36px; margin-top: 100px;">${winMessage}</h1>
+        <h1 style="font-size: 32px; margin-top: 80px;">${winMessage}</h1>
         <div>
             <img src="assets/again.png" class="button-image" alt="Play Again" onclick="startGame()">
         </div>
@@ -98,10 +106,10 @@ function loseGame() {
     sadMusic.play();
     
     document.body.style.backgroundImage = '';
-    
+
     gameContainer.innerHTML = `
         <img src="assets/lose.jpg" style="width: 90%; max-width: 600px; margin-top: 20px; border: 5px solid white; border-radius: 10px;">
-        <h1 style="font-size: 30px; margin-top: 20px;">I'm sorry you lost this time, you have to visit the docs!</h1>
+        <h1 style="font-size: 28px; margin-top: 20px;">I'm sorry you lost this time, you have to visit the docs!</h1>
         <div>
             <img src="assets/again.png" class="button-image" alt="Play Again" onclick="startGame()">
         </div>
