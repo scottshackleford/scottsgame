@@ -218,9 +218,8 @@
       document.getElementById('round2Instruction').innerHTML = "Round 2! Pick wisely... 😉";
       document.getElementById('round2Instruction').style.display = "block";
 
-      // Create the second stage only now
-      let secondStage = document.getElementById('secondStage');
-      secondStage.innerHTML = `
+      // Dynamically create the second round
+      document.getElementById('secondStage').innerHTML = `
         <div class="second-covers">
           <div class="second-cover-box" onclick="secondReveal('good')">Choose Me</div>
           <div class="second-cover-box" onclick="secondReveal('bad')">Choose Me</div>
@@ -338,3 +337,4 @@
 
 </body>
 </html>
+
