@@ -160,12 +160,12 @@
   <div id="instruction">Choose your Thai bride! 🇹🇭</div>
 
   <div class="covers" id="firstStage">
-    <div class="cover-box" onclick="reveal(0)">
+    <div class="cover-box" id="box0" onclick="reveal(0)">
       <div class="number-label">1</div>
       <img id="cover0" src="download-3.jpg" alt="Bangkok Cover">
       <img id="real0" src="download.jpg" alt="Midget" style="display: none;">
     </div>
-    <div class="cover-box" onclick="reveal(1)">
+    <div class="cover-box" id="box1" onclick="reveal(1)">
       <div class="number-label">2</div>
       <img id="cover1" src="download-3.jpg" alt="Bangkok Cover">
       <img id="real1" src="download-1.jpg" alt="Minor" style="display: none;">
@@ -246,29 +246,25 @@
     if (alreadyPicked) return;
     alreadyPicked = true;
 
-    document.getElementById('cover0').style.opacity = "0";
-    document.getElementById('cover1').style.opacity = "0";
+    // Hide both entire boxes
+    document.getElementById('box0').style.display = 'none';
+    document.getElementById('box1').style.display = 'none';
+
+    // Show only the selected real image
+    document.getElementById(`real${index}`).style.display = "block";
+
+    document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
+    document.getElementById('winnerWord').style.display = "block";
+    document.getElementById('winnerLike').textContent = "You Liiiiike!";
+    document.getElementById('winnerLike').style.display = "block";
+
+    launchFireworks();
 
     setTimeout(() => {
-      document.getElementById('cover0').style.display = "none";
-      document.getElementById('cover1').style.display = "none";
-
-      document.getElementById(`real0`).style.display = (index == 0) ? "block" : "none";
-      document.getElementById(`real1`).style.display = (index == 1) ? "block" : "none";
-
-      document.getElementById('winnerWord').textContent = choices[index].word + " 🎉";
-      document.getElementById('winnerWord').style.display = "block";
-      document.getElementById('winnerLike').textContent = "You Liiiiike!";
-      document.getElementById('winnerLike').style.display = "block";
-
-      launchFireworks();
-
-      setTimeout(() => {
-        document.getElementById('playButton').style.display = "inline-block";
-        document.getElementById('playButton').innerText = "Click here for Round 2";
-        round = 2;
-      }, 2000);
-    }, 1000);
+      document.getElementById('playButton').style.display = "inline-block";
+      document.getElementById('playButton').innerText = "Click here for Round 2";
+      round = 2;
+    }, 2000);
   }
 
   function secondReveal(result) {
@@ -337,6 +333,3 @@
 
 </body>
 </html>
-
-
-
