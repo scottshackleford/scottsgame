@@ -14,23 +14,23 @@ body {
 }
 
 #top-image {
-    width: 80%;
+    width: 90%;
     max-width: 600px;
-    margin-top: 20px;
+    margin-top: 10px;
     border: 5px solid white;
     border-radius: 10px;
 }
 
 #choice-container {
-    margin-top: 40px;
+    margin-top: 20px;
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
 .choice-image {
-    width: 200px;
+    width: 250px;
     height: auto;
     border: 3px solid white;
     border-radius: 10px;
@@ -44,7 +44,32 @@ body {
 }
 
 #message-container {
-    margin-top: 40px;
-    font-size: 24px;
-    padding: 20px;
+    margin-top: 20px;
+    font-size: 20px;
+    padding: 10px;
+}
+
+.button-image {
+    width: 200px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    #top-image {
+        width: 95%;
+    }
+
+    .choice-image {
+        width: 180px;
+    }
+
+    .button-image {
+        width: 150px;
+    }
+
+    #message-container {
+        font-size: 18px;
+    }
 }
